@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+class Author extends Model
+{
+    protected $fillable = [
+        'first_name',
+        'last_name',
+         'last_book_title',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
+    protected $appends = ['full_name'];
+
+    /**
+     * Return Authors Books
+     * @return BelongsToMany
+     */
+    public function books(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'author_book')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get full name
+     * @return string
+     */
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+}
