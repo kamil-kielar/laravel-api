@@ -45,4 +45,10 @@ class Author extends Model
         return "{$this->first_name} {$this->last_name}";
     }
 
+    public function scopeSearchByBookTitle($query, string $search)
+    {
+        return $query->whereHas('books', function ($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%");
+        });
+    }
 }
