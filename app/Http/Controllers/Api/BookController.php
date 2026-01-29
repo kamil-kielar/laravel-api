@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookResource;
 use App\Jobs\UpdateAuthorLastBook;
 use App\Models\Book;
