@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Models\Book;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+
+class UpdateAuthorLastBook implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(public Book $book)
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        try {
+            $authors = $this->book->authors;
+
+            foreach ($authors as $author) {
+                $author->update([
+                    'last_book_title' => $this->book->title,
+                ]);
+
+                Log::info("Updated last_book_title for author: {$author->full_name}");
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to update author last book: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+}
